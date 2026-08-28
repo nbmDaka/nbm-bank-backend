@@ -1,9 +1,34 @@
 package main
 
-import "log"
+import (
+	"log"
 
-func main() {
+	"github.com/nbmDaka/nbm-bank-backend/services/user-service/config"
+)
 
-	log.Println("NBM User Service started")
+
+func main(){
+
+	err := config.LoadEnv()
+
+	if err != nil {
+		log.Println(
+		"No .env file found",
+		)
+	}
+
+
+	cfg := config.Load()
+
+
+	log.Println(
+		"Environment:",
+		cfg.App.Environment,
+	)
+	
+	log.Println(
+		"Port:",
+		cfg.App.Port,
+	)
 
 }
