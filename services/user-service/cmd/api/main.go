@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/config"
-	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/platform/database"
+	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/app"
 )
 
 func main() {
@@ -19,16 +19,19 @@ func main() {
 
 	cfg := config.Load()
 
-
-	db, err := database.NewPostgres(
-		cfg.Database,
-	)
+	application, err := app.New(cfg)
 
 	if err != nil {
-		log.Fatal(
-			"database connection failed:",
-			err,
-		)
+		log.Fatal(err)
 	}
-	defer db.Close()
+
+	err = application.Start()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for {
+		// Do nothing, just keep the main goroutine alive
+	}
 }
