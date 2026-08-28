@@ -57,6 +57,26 @@ services:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
 
+    volumes:
+      - ./keycloak/data:/opt/keycloak/data
+
+  openbao:
+      image: openbao/openbao:latest
+      container_name: nbm-openbao
+      restart: unless-stopped
+
+      ports:
+        - "8200:8200"
+
+      environment:
+        BAO_DEV_ROOT_TOKEN_ID: root
+
+      cap_add:
+        - IPC_LOCK
+
+      command:
+        server -dev
+
 volumes:
   postgres_data:
   redis_data:

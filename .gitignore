@@ -14,3 +14,6 @@
 
 # OS
 .DS_Store
+
+nbm-bank-backend\keycloak\*
+nbm-bank-backend\openbao\*
