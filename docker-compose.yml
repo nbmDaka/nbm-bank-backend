@@ -64,19 +64,36 @@ services:
       image: openbao/openbao:latest
       container_name: nbm-openbao
       restart: unless-stopped
-
       ports:
         - "8200:8200"
-
       environment:
-        BAO_DEV_ROOT_TOKEN_ID: root
-
+        BAO_DEV_ROOT_TOKEN_ID: ${BAO_DEV_ROOT_TOKEN_ID}
       cap_add:
         - IPC_LOCK
-
       command:
         server -dev
 
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    container_name: nbm-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./deployments/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:12.1.0
+    container_name: nbm-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+
+    depends_on:
+      - prometheus
 volumes:
   postgres_data:
   redis_data:
