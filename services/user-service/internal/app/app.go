@@ -4,23 +4,16 @@ package app
 import (
 
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/config"
-
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/platform/database"
-
 	grpcserver "github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/server/grpc"
 	grpcuser "github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/delivery/grpc"
 
 )
 
-
-
 type App struct {
 	db database.DB
 	grpc *grpcserver.Server
-
 }
-
-
 
 
 func New(cfg config.Config) (*App,error){
