@@ -8,6 +8,7 @@ import (
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/platform/database"
 
 	grpcserver "github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/server/grpc"
+	grpcuser "github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/delivery/grpc"
 
 )
 
@@ -31,9 +32,11 @@ func New(cfg config.Config) (*App,error){
 		return nil,err
 	}
 
+	userHandler := grpcuser.NewHandler()
+
 	return &App{
 		db: db,
-		grpc: grpcserver.NewServer(cfg.App.Port),
+		grpc: grpcserver.NewServer(cfg.App.Port, userHandler),
 	},nil
 }
 

@@ -3,19 +3,29 @@ package grpc
 import (
 	"net"
 
+	pb "github.com/nbmDaka/nbm-bank-backend/services/user-service/proto/user"
+
 	"google.golang.org/grpc"
 )
 
 type Server struct {
+
 	server *grpc.Server
+
 	port string
+
 }
 
-func NewServer(port string) *Server {
+
+func NewServer(port string, userHandler pb.UserServiceServer) *Server {
+
+	grpcServer := grpc.NewServer()
+
+	pb.RegisterUserServiceServer(grpcServer, userHandler)
 
 	return &Server{
-		server: grpc.NewServer(),
-		port: port,
+		server: grpcServer,
+		port:   port,
 	}
 
 }
