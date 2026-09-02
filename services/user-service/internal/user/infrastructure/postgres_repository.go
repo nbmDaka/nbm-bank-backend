@@ -2,17 +2,18 @@ package infrastructure
 
 import (
 	"context"
-	"database/sql"
 
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/domain"
+	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/platform/database"
 )
 
 type PostgresUserRepository struct {
-	db *sql.DB
+	db database.DB
 }
 
+
 func NewPostgresUserRepository(
-	db *sql.DB,
+	db database.DB,
 ) *PostgresUserRepository {
 	return &PostgresUserRepository{
 		db: db,

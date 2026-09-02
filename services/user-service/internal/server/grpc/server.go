@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"net"
+	"log"
 
 	pb "github.com/nbmDaka/nbm-bank-backend/services/user-service/proto/user"
 
@@ -32,7 +33,10 @@ func NewServer(port string, userHandler pb.UserServiceServer) *Server {
 
 func (s *Server) Start() error {
 
-	println("GRPC server starting on " + s.port)
+	log.Println(
+	"gRPC server starting on",
+	s.port,
+	)
 
 	listener, err := net.Listen(
 		"tcp",

@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 	"time"
-	"github.com/nbmDaka/nbm-bank-backend/services/user-service/config"
 	_ "github.com/jackc/pgx/v5/stdlib"
+	"github.com/nbmDaka/nbm-bank-backend/services/user-service/config"
 )
 
 type Postgres struct {
@@ -52,19 +52,43 @@ func NewPostgres(
 	}
 
 	return &Postgres{
-		db:db,
+		db: db,
 	},nil
-
 }
 
 
 
-func (p *Postgres) Close(){
-	p.db.Close()
+func (p *Postgres) Close() error {
+	return p.db.Close()
 }
 
 
-
-func (p *Postgres) Ping(ctx context.Context,) error {
+func (p *Postgres) PingContext(ctx context.Context) error {
 	return p.db.PingContext(ctx)
+}
+
+func (p *Postgres) QueryRowContext(
+	ctx context.Context,
+	query string,
+	args ...any,
+) *sql.Row {
+
+	return p.db.QueryRowContext(
+		ctx,
+		query,
+		args...,
+	)
+}
+
+func (p *Postgres) ExecContext(
+	ctx context.Context,
+	query string,
+	args ...any,
+) (sql.Result,error){
+
+	return p.db.ExecContext(
+		ctx,
+		query,
+		args...,
+	)
 }

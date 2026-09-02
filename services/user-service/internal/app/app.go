@@ -7,6 +7,8 @@ import (
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/platform/database"
 	grpcserver "github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/server/grpc"
 	grpcuser "github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/delivery/grpc"
+	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/application"
+	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/infrastructure"
 
 )
 
@@ -17,6 +19,7 @@ type App struct {
 
 
 func New(cfg config.Config) (*App,error){
+
 	db, err := database.NewPostgres(
 		cfg.Database,
 	)
@@ -25,11 +28,28 @@ func New(cfg config.Config) (*App,error){
 		return nil,err
 	}
 
-	userHandler := grpcuser.NewHandler()
+
+	userRepository := infrastructure.NewPostgresUserRepository(
+		db,
+	)
+
+
+	userService := application.NewUserService(
+		userRepository,
+	)
+
+
+	userHandler := grpcuser.NewHandler(
+		userService,
+	)
+
 
 	return &App{
 		db: db,
-		grpc: grpcserver.NewServer(cfg.App.Port, userHandler),
+		grpc: grpcserver.NewServer(
+			cfg.App.Port,
+			userHandler,
+		),
 	},nil
 }
 
