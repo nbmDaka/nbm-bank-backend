@@ -59,3 +59,33 @@ func (r *PostgresUserRepository) GetByID(
 
 	return user, nil
 }
+
+func (r *PostgresUserRepository) Create(
+	ctx context.Context,
+	user *domain.User,
+) error {
+
+	query := `
+		INSERT INTO users (
+			email,
+			password_hash,
+			first_name,
+			last_name
+		)
+		VALUES ($1, $2, $3, $4)
+		RETURNING id, created_at, updated_at
+	`
+
+	return r.db.QueryRowContext(
+		ctx,
+		query,
+		user.Email,
+		user.PasswordHash,
+		user.FirstName,
+		user.LastName,
+	).Scan(
+		&user.ID,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+}
