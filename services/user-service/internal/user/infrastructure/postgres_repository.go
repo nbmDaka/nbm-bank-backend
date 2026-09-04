@@ -29,16 +29,13 @@ func (r *PostgresUserRepository) GetByID(
 		SELECT
 			id,
 			email,
-			password_hash,
 			first_name,
-			last_name,
-			created_at,
-			updated_at
+			last_name
 		FROM users
 		WHERE id = $1
 	`
 
-	user := &domain.User{}
+	var user domain.User
 
 	err := r.db.QueryRowContext(
 		ctx,
@@ -47,18 +44,15 @@ func (r *PostgresUserRepository) GetByID(
 	).Scan(
 		&user.ID,
 		&user.Email,
-		&user.PasswordHash,
 		&user.FirstName,
 		&user.LastName,
-		&user.CreatedAt,
-		&user.UpdatedAt,
 	)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return user, nil
+	return &user, nil
 }
 
 func (r *PostgresUserRepository) Create(

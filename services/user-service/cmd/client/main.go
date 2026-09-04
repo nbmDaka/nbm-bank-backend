@@ -59,13 +59,5 @@ func main() {
 	}
 
 
-
-	fmt.Println("User:")
-	if response.User != nil {
-		fmt.Println("ID:", response.User.Id)
-		fmt.Println("Email:", response.User.Email)
-		fmt.Println("First name:", response.User.FirstName)
-		fmt.Println("Last name:", response.User.LastName)
-	}
-
+	fmt.Println("User:", response.User)
 }
