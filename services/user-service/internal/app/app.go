@@ -2,7 +2,7 @@ package app
 
 
 import (
-
+	"context"
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/config"
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/platform/database"
 	grpcserver "github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/server/grpc"
@@ -22,6 +22,15 @@ func New(cfg config.Config) (*App,error){
 
 	db, err := database.NewPostgres(
 		cfg.Database,
+	)
+
+	if err != nil {
+		return nil,err
+	}
+
+	err = database.RunMigrations(
+		context.Background(),
+		db,
 	)
 
 	if err != nil {
