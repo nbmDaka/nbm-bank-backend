@@ -2,7 +2,10 @@ package grpc
 
 import (
 	"context"
-
+	"errors"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/domain"
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/application"
 	pb "github.com/nbmDaka/nbm-bank-backend/services/user-service/proto/user"
 )
@@ -34,7 +37,18 @@ func (h *Handler) GetUser(
 	)
 
 	if err != nil {
-		return nil,err
+		if errors.Is(err, domain.ErrUserNotFound) {
+			return nil,status.Error(
+				codes.NotFound,
+				"User not found",
+			)
+		}
+
+
+		return nil,status.Error(
+			codes.Internal,
+			"Internal server error",
+		)
 	}
 
 

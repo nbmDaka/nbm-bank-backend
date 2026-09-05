@@ -49,7 +49,7 @@ func main() {
 	response, err := client.GetUser(
 		ctx,
 		&pb.GetUserRequest{
-			Id: 1,
+			Id: 999,
 		},
 	)
 

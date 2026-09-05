@@ -2,7 +2,7 @@ package infrastructure
 
 import (
 	"context"
-
+	"database/sql"
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/domain"
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/platform/database"
 )
@@ -48,7 +48,13 @@ func (r *PostgresUserRepository) GetByID(
 		&user.LastName,
 	)
 
+	
 	if err != nil {
+
+		if err == sql.ErrNoRows {
+			return nil, domain.ErrUserNotFound
+		}
+
 		return nil, err
 	}
 
