@@ -11,12 +11,11 @@ func LoadEnv() error {
 	err := godotenv.Load()
 
 	if err != nil {
-		return err
+		return nil
 	}
 
 	return nil
 }
-
 
 func GetEnv(key string, fallback string) string {
 
