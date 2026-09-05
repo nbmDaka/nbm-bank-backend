@@ -8,6 +8,7 @@ import (
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/domain"
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/application"
 	pb "github.com/nbmDaka/nbm-bank-backend/services/user-service/proto/user"
+	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/mapper"
 )
 
 
@@ -53,13 +54,6 @@ func (h *Handler) GetUser(
 
 
 	return &pb.GetUserResponse{
-
-		User:&pb.User{
-			Id:user.ID,
-			Email:user.Email,
-			FirstName:user.FirstName,
-			LastName:user.LastName,
-		},
-
-	},nil
+		User: mapper.ToProto(user),
+	}, nil
 }

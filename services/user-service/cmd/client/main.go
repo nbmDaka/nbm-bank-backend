@@ -12,9 +12,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-
 func main() {
-
 
 	conn, err := grpc.NewClient(
 		"localhost:50051",
@@ -23,19 +21,13 @@ func main() {
 		),
 	)
 
-
 	if err != nil {
 		log.Fatal(err)
 	}
 
-
 	defer conn.Close()
 
-
-
 	client := pb.NewUserServiceClient(conn)
-
-
 
 	ctx, cancel := context.WithTimeout(
 		context.Background(),
@@ -44,20 +36,16 @@ func main() {
 
 	defer cancel()
 
-
-
 	response, err := client.GetUser(
 		ctx,
 		&pb.GetUserRequest{
-			Id: 999,
+			Id: 1,
 		},
 	)
-
 
 	if err != nil {
 		log.Fatal(err)
 	}
-
 
 	fmt.Println("User:", response.User)
 }
