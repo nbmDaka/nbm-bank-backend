@@ -2,19 +2,18 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
 	pb "github.com/nbmDaka/nbm-bank-backend/services/user-service/proto/user"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
 )
 
 func main() {
 
-	conn, err := grpc.NewClient(
+	conn, err := grpc.Dial(
 		"localhost:50051",
 		grpc.WithTransportCredentials(
 			insecure.NewCredentials(),
@@ -33,6 +32,11 @@ func main() {
 		context.Background(),
 		time.Second*5,
 	)
+	ctx = metadata.AppendToOutgoingContext(
+		ctx,
+		"authorization",
+		"Bearer test-token",
+	)
 
 	defer cancel()
 
@@ -47,5 +51,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("User:", response.User)
+	log.Println(
+		response,
+	)
 }
