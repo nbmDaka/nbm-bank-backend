@@ -5,6 +5,8 @@ import "time"
 type User struct {
 	ID int64
 
+	KeycloakID string
+
 	Email string
 
 	PasswordHash string

@@ -28,10 +28,19 @@ func (m *mockUserRepository) Create(
 	return nil
 }
 
+func (m *mockUserRepository) GetByKeycloakID(
+	ctx context.Context,
+	keycloakID string,
+) (*domain.User,error){
+
+	return m.user, m.err
+}
+
 func TestGetUser(t *testing.T){
 
 	expectedUser := &domain.User{
 		ID:1,
+		KeycloakID:"d5de79ce-dd1f-4101-8668-d2783752c230",
 		Email:"test@test.com",
 		FirstName:"John",
 		LastName:"Smith",

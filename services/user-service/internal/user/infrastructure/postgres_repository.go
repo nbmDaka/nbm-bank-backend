@@ -90,3 +90,45 @@ func (r *PostgresUserRepository) Create(
 		&user.UpdatedAt,
 	)
 }
+
+func (r *PostgresUserRepository) GetByKeycloakID(
+	ctx context.Context,
+	keycloakID string,
+) (*domain.User, error) {
+
+	query := `
+		SELECT
+			id,
+			keycloak_id,
+			email,
+			first_name,
+			last_name
+		FROM users
+		WHERE keycloak_id = $1
+	`
+
+	var user domain.User
+
+	err := r.db.QueryRowContext(
+		ctx,
+		query,
+		keycloakID,
+	).Scan(
+		&user.ID,
+		&user.KeycloakID,
+		&user.Email,
+		&user.FirstName,
+		&user.LastName,
+	)
+
+	if err != nil {
+
+		if err == sql.ErrNoRows {
+			return nil, domain.ErrUserNotFound
+		}
+
+		return nil, err
+	}
+
+	return &user,nil
+}

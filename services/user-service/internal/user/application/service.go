@@ -31,6 +31,17 @@ func (s *UserService) GetUser(
 	)
 }
 
+func (s *UserService) GetCurrentUser(
+	ctx context.Context,
+	keycloakID string,
+) (*domain.User,error){
+
+	return s.repo.GetByKeycloakID(
+		ctx,
+		keycloakID,
+	)
+}
+
 
 func (s *UserService) CreateUser(
 	ctx context.Context,

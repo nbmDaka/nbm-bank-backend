@@ -15,4 +15,9 @@ type UserRepository interface {
 		ctx context.Context,
 		user *User,
 	) error
+
+	GetByKeycloakID(
+		ctx context.Context,
+		keycloakID string,
+	) (*User,error)
 }
