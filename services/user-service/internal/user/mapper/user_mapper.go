@@ -12,6 +12,7 @@ func ToProto(
 
 	return &pb.User{
 		Id: user.ID,
+		KeycloakId: user.KeycloakID,
 		Email: user.Email,
 		FirstName: user.FirstName,
 		LastName: user.LastName,
