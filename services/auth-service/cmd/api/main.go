@@ -29,11 +29,40 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	
+	err = kc.CreateUser(
+		token,
+		keycloak.CreateUserRequest{
 
-	log.Println(
-		"received keycloak token:",
-		token[:20],
+			Username: "john",
+
+			Email: "john@test.com",
+
+			FirstName: "John",
+
+			LastName: "Smith",
+
+			Enabled: true,
+
+
+			Credentials: []keycloak.Credential{
+
+				{
+					Type: "password",
+					Value: "Password123!",
+					Temporary: false,
+				},
+			},
+		},
 	)
+
+
+if err != nil {
+	log.Fatal(err)
+}
+
+
+log.Println("user created")
 
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 
