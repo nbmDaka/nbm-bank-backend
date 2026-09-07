@@ -2,10 +2,12 @@ package application
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/domain"
 )
+
 
 type mockUserRepository struct {
 	user *domain.User
@@ -187,3 +189,69 @@ func TestGetCurrentUser_UserNotFound(t *testing.T) {
 		)
 	}
 }
+
+func TestGetUser_RepositoryError(t *testing.T) {
+
+	repoErr := errors.New("database connection failed")
+
+	mockRepo := &mockUserRepository{
+		err: repoErr,
+	}
+
+	service := NewUserService(
+		mockRepo,
+	)
+
+	_, err := service.GetUser(
+		context.Background(),
+		1,
+	)
+
+	if err == nil {
+		t.Fatal(
+			"expected error but got nil",
+		)
+	}
+
+	if !errors.Is(err, repoErr) {
+		t.Fatalf(
+			"expected error %v, got %v",
+			repoErr,
+			err,
+		)
+	}
+}
+
+func TestGetCurrentUser_RepositoryError(t *testing.T) {
+
+	repoErr := errors.New("database connection failed")
+
+	mockRepo := &mockUserRepository{
+		err: repoErr,
+	}
+
+	service := NewUserService(
+		mockRepo,
+	)
+
+	_, err := service.GetCurrentUser(
+		context.Background(),
+		"d5de79ce-dd1f-4101-8668-d2783752c230",
+	)
+
+	if err == nil {
+		t.Fatal(
+			"expected error but got nil",
+		)
+	}
+
+	if !errors.Is(err, repoErr) {
+		t.Fatalf(
+			"expected error %v, got %v",
+			repoErr,
+			err,
+		)
+	}
+}
+
+
