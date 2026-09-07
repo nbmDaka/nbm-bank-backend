@@ -8,6 +8,11 @@ option go_package = "github.com/nbmDaka/nbm-bank-backend/services/user-service/p
 service UserService {
 
   rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (GetUserResponse);
+
+}
+
+message GetCurrentUserRequest {
 
 }
 

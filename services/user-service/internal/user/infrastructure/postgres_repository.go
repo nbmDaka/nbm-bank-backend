@@ -3,14 +3,14 @@ package infrastructure
 import (
 	"context"
 	"database/sql"
-	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/domain"
+
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/platform/database"
+	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/domain"
 )
 
 type PostgresUserRepository struct {
 	db database.DB
 }
-
 
 func NewPostgresUserRepository(
 	db database.DB,
@@ -48,7 +48,6 @@ func (r *PostgresUserRepository) GetByID(
 		&user.LastName,
 	)
 
-	
 	if err != nil {
 
 		if err == sql.ErrNoRows {
@@ -68,18 +67,20 @@ func (r *PostgresUserRepository) Create(
 
 	query := `
 		INSERT INTO users (
+			keycloak_id,
 			email,
 			password_hash,
 			first_name,
 			last_name
 		)
-		VALUES ($1, $2, $3, $4)
+		VALUES ($1, $2, $3, $4, $5)
 		RETURNING id, created_at, updated_at
 	`
 
 	return r.db.QueryRowContext(
 		ctx,
 		query,
+		user.KeycloakID,
 		user.Email,
 		user.PasswordHash,
 		user.FirstName,
@@ -130,5 +131,5 @@ func (r *PostgresUserRepository) GetByKeycloakID(
 		return nil, err
 	}
 
-	return &user,nil
+	return &user, nil
 }

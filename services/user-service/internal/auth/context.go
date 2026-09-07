@@ -20,11 +20,11 @@ func SetUserID(
 
 func GetUserID(
 	ctx context.Context,
-) string {
+) (string, bool) {
 
 	value := ctx.Value(UserIDKey)
 
-	id, _ := value.(string)
+	id, ok := value.(string)
 
-	return id
+	return id, ok
 }

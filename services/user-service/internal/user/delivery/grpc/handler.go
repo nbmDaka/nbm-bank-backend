@@ -10,6 +10,7 @@ import (
 	pb "github.com/nbmDaka/nbm-bank-backend/services/user-service/proto/user"
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/mapper"
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/validation"
+	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/auth"
 )
 
 
@@ -68,4 +69,48 @@ func (h *Handler) GetUser(
 	return &pb.GetUserResponse{
 		User: mapper.ToProto(user),
 	}, nil
+}
+
+func (h *Handler) GetCurrentUser(
+	ctx context.Context,
+	req *pb.GetCurrentUserRequest,
+) (*pb.GetUserResponse,error){
+
+
+	keycloakID, ok := auth.GetUserID(ctx)
+
+	if !ok {
+		return nil,status.Error(
+			codes.Unauthenticated,
+			"user identity missing",
+		)
+	}
+
+
+	user, err := h.service.GetCurrentUser(
+		ctx,
+		keycloakID,
+	)
+
+
+	if err != nil {
+
+		if errors.Is(err, domain.ErrUserNotFound) {
+			return nil,status.Error(
+				codes.NotFound,
+				"user not found",
+			)
+		}
+
+
+		return nil,status.Error(
+			codes.Internal,
+			"internal server error",
+		)
+	}
+
+
+	return &pb.GetUserResponse{
+		User: mapper.ToProto(user),
+	},nil
 }
