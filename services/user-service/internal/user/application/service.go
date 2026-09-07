@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/domain"
-	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/password"
 )
 
 type UserService struct {
@@ -43,24 +42,10 @@ func (s *UserService) GetCurrentUser(
 }
 
 
-func (s *UserService) CreateUser(
+func (s *UserService) CreateUserProfile(
 	ctx context.Context,
 	user *domain.User,
-	rawPassword string,
 ) error {
-
-
-	hash, err := password.Hash(
-		rawPassword,
-	)
-
-
-	if err != nil {
-		return err
-	}
-
-
-	user.PasswordHash = hash
 
 
 	return s.repo.Create(

@@ -114,3 +114,41 @@ func (h *Handler) GetCurrentUser(
 		User: mapper.ToProto(user),
 	},nil
 }
+
+func (h *Handler) CreateUser(
+	ctx context.Context,
+	req *pb.CreateUserRequest,
+) (*pb.CreateUserResponse, error) {
+
+
+	user := &domain.User{
+
+		KeycloakID: req.KeycloakId,
+
+		Email: req.Email,
+
+		FirstName: req.FirstName,
+
+		LastName: req.LastName,
+	}
+
+
+	err := h.service.CreateUserProfile(
+		ctx,
+		user,
+	)
+
+
+	if err != nil {
+
+		return nil, status.Error(
+			codes.Internal,
+			err.Error(),
+		)
+	}
+
+
+	return &pb.CreateUserResponse{
+		User: mapper.ToProto(user),
+	}, nil
+}

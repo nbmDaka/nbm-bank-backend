@@ -69,11 +69,10 @@ func (r *PostgresUserRepository) Create(
 		INSERT INTO users (
 			keycloak_id,
 			email,
-			password_hash,
 			first_name,
 			last_name
 		)
-		VALUES ($1, $2, $3, $4, $5)
+		VALUES ($1, $2, $3, $4)
 		RETURNING id, created_at, updated_at
 	`
 
