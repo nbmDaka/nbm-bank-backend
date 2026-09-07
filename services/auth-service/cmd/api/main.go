@@ -29,14 +29,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
-	err = kc.CreateUser(
+
+	userID, err := kc.CreateUser(
 		token,
 		keycloak.CreateUserRequest{
 
-			Username: "john",
+			Username: "john1",
 
-			Email: "john@test.com",
+			Email: "john1@test.com",
 
 			FirstName: "John",
 
@@ -44,25 +44,31 @@ func main() {
 
 			Enabled: true,
 
-
 			Credentials: []keycloak.Credential{
 
 				{
-					Type: "password",
-					Value: "Password123!",
+					Type:      "password",
+					Value:     "Password123!",
 					Temporary: false,
 				},
 			},
 		},
 	)
 
+	if err != nil {
+		log.Fatal(err)
+	}
 
-if err != nil {
-	log.Fatal(err)
-}
+	log.Println(
+		"user created with id:",
+		userID,
+	)
 
+	if err != nil {
+		log.Fatal(err)
+	}
 
-log.Println("user created")
+	log.Println("user created")
 
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 

@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strings"
 	"bytes"
+	"io"
 	"github.com/nbmDaka/nbm-bank-backend/services/auth-service/config"
 )
 
@@ -132,7 +133,7 @@ func (c *Client) GetAdminToken() (string, error) {
 func (c *Client) CreateUser(
 	token string,
 	user CreateUserRequest,
-) error {
+) (string, error) {
 
 
 	url := fmt.Sprintf(
@@ -145,7 +146,7 @@ func (c *Client) CreateUser(
 	body, err := json.Marshal(user)
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
 
@@ -157,7 +158,7 @@ func (c *Client) CreateUser(
 
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
 
@@ -177,7 +178,7 @@ func (c *Client) CreateUser(
 
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
 
@@ -187,12 +188,39 @@ func (c *Client) CreateUser(
 
 	if resp.StatusCode != http.StatusCreated {
 
-		return fmt.Errorf(
-			"create user failed: %s",
+	body, _ := io.ReadAll(resp.Body)
+
+	return "",
+		fmt.Errorf(
+			"create user failed: %s body=%s",
 			resp.Status,
+			string(body),
 		)
+}
+
+	location := resp.Header.Get(
+		"Location",
+	)
+
+
+	if location == "" {
+
+		return "",
+			fmt.Errorf(
+				"missing location header",
+			)
 	}
 
 
-	return nil
+
+	parts := strings.Split(
+		location,
+		"/",
+	)
+
+
+	userID := parts[len(parts)-1]
+
+
+	return userID, nil
 }
