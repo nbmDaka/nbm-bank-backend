@@ -6,32 +6,72 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+type Claims struct {
+	Email string `json:"email"`
+
+	PreferredUsername string `json:"preferred_username"`
+
+	Azp string `json:"azp"`
+
+	jwt.RegisteredClaims
+}
 
 func ValidateToken(
 	tokenString string,
-) (*jwt.Token,error){
+	jwks *JWKS,
+) (*jwt.Token, error) {
 
+	claims := &Claims{}
 
-	token, err := jwt.Parse(
+	token, err := jwt.ParseWithClaims(
 		tokenString,
-		func(token *jwt.Token)(interface{},error){
+		claims,
+		func(token *jwt.Token) (interface{}, error) {
 
-			if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
+			if token.Method.Alg() != "RS256" {
 				return nil, fmt.Errorf(
-					"unexpected signing method",
-				)
+				"unexpected signing algorithm",
+			)
+}
+
+			if jwks == nil {
+				var err error
+				jwks, err = GetJWKS()
+				if err != nil {
+					return nil, fmt.Errorf("failed to fetch jwks: %w", err)
+				}
 			}
 
+			kid, ok := token.Header["kid"].(string)
+			if !ok {
+				return nil, fmt.Errorf("missing kid in token header")
+			}
 
-			return nil,nil
+			return jwks.GetPublicKey(kid)
 		},
 	)
 
-
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 
+	if !token.Valid {
+		return nil, fmt.Errorf("invalid token")
+	}
 
-	return token,nil
+	issuer := claims.Issuer
+
+	if issuer != "http://localhost:8080/realms/nbm-bank" {
+		return nil, fmt.Errorf(
+			"invalid issuer",
+		)
+	}
+
+	if claims.Azp != "nbm-backend" {
+		return nil, fmt.Errorf(
+			"invalid client",
+		)
+	}
+
+	return token, nil
 }

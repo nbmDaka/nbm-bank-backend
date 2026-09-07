@@ -42,17 +42,50 @@ func UnaryAuthInterceptor(
 
 	token := authHeader[0]
 
-
 	if !strings.HasPrefix(
 		token,
 		"Bearer ",
-	){
+	) {
 		return nil, status.Error(
 			codes.Unauthenticated,
 			"invalid token format",
 		)
 	}
 
+	jwtToken := strings.TrimPrefix(token, "Bearer ")
+
+
+	jwks, err := GetJWKS()
+	if err != nil {
+		return nil, status.Error(
+			codes.Unauthenticated,
+			"failed to get jwks",
+		)
+	}
+
+	parsedToken, err := ValidateToken(
+		jwtToken,
+		jwks,
+	)
+	if err != nil {
+		return nil, status.Error(
+			codes.Unauthenticated,
+			err.Error(),
+		)
+	}
+
+	claims, ok := parsedToken.Claims.(*Claims)
+	if !ok {
+		return nil, status.Error(
+			codes.Unauthenticated,
+			"invalid claims",
+		)
+	}
+
+	ctx = SetUserID(
+		ctx,
+		claims.Subject,
+	)
 
 	return handler(ctx, req)
-}
+}
