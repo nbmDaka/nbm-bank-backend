@@ -2,7 +2,7 @@ package mapper
 
 import (
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/domain"
-	pb "github.com/nbmDaka/nbm-bank-backend/services/user-service/proto/user"
+	pb "github.com/nbmDaka/nbm-bank-backend/proto/user"
 )
 
 

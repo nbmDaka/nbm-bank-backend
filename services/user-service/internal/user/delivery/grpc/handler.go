@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc/status"
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/domain"
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/application"
-	pb "github.com/nbmDaka/nbm-bank-backend/services/user-service/proto/user"
+	pb "github.com/nbmDaka/nbm-bank-backend/proto/user"
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/mapper"
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/user/validation"
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/auth"

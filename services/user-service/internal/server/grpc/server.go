@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/nbmDaka/nbm-bank-backend/services/user-service/proto/user"
+	pb "github.com/nbmDaka/nbm-bank-backend/proto/user"
 
 	"github.com/nbmDaka/nbm-bank-backend/services/user-service/internal/auth"
 

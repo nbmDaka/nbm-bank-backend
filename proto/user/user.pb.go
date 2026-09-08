@@ -366,7 +366,7 @@ const file_proto_user_proto_rawDesc = "" +
 	"\aGetUser\x12\x14.user.GetUserRequest\x1a\x15.user.GetUserResponse\x12D\n" +
 	"\x0eGetCurrentUser\x12\x1b.user.GetCurrentUserRequest\x1a\x15.user.GetUserResponse\x12?\n" +
 	"\n" +
-	"CreateUser\x12\x17.user.CreateUserRequest\x1a\x18.user.CreateUserResponseBFZDgithub.com/nbmDaka/nbm-bank-backend/services/user-service/proto/userb\x06proto3"
+	"CreateUser\x12\x17.user.CreateUserRequest\x1a\x18.user.CreateUserResponseB0Z.github.com/nbmDaka/nbm-bank-backend/proto/userb\x06proto3"
 
 var (
 	file_proto_user_proto_rawDescOnce sync.Once
